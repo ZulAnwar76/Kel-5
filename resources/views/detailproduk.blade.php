@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -80,7 +79,7 @@
       object-fit: cover;
     }
 
-    footer {
+    .footer {
       background-color: #3b5d50;
       color: #fff;
       text-align: center;
@@ -91,7 +90,7 @@
 </head>
 
 <body>
-  <!-- Navbar -->
+<!-- Navbar -->
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <a class="navbar-brand" href="index">SuwandiSecBrand<span>.</span></a>
@@ -111,9 +110,7 @@
       </div>
     </div>
   </nav>
-
   <!-- Breadcrumb -->
-
 
   <!-- Product Section -->
   <div class="container mt-4">
@@ -136,6 +133,7 @@
       </div>
     </div>
   </div>
+
   <!-- Footer -->
   <footer>
     <p>&copy; {{ date('Y') }} SuwandiSecBrand. All rights reserved.</p>
@@ -143,5 +141,4 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
