@@ -174,3 +174,387 @@
         </div>
     </body>
 </html>
+
+<style>
+    html, body {
+      height: 100%;
+      min-height: 100%;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .main-content {
+      flex: 1 0 auto;
+    }
+    .footer-section {
+      flex-shrink: 0;
+    }
+
+    :root {
+      --primary-blue: #1e3a8a;
+      --secondary-blue: #3b82f6;
+      --light-blue: #dbeafe;
+      --accent-blue: #60a5fa;
+      --dark-blue: #1e40af;
+      --shadow-primary: 0 10px 30px rgba(30, 58, 138, 0.15);
+      --shadow-secondary: 0 4px 15px rgba(59, 130, 246, 0.1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #D3DEFF;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    /* Header Styling */
+    .custom-navbar {
+      background: #3366FF !important;
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+    .custom-navbar .navbar-brand {
+      font-size: 32px;
+      font-weight: 600;
+    }
+    .custom-navbar .navbar-brand > span {
+      opacity: .4;
+    }
+    .custom-navbar .navbar-toggler {
+      border-color: transparent;
+    }
+    .custom-navbar .navbar-toggler:active, .custom-navbar .navbar-toggler:focus {
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      outline: none;
+    }
+    @media (min-width: 992px) {
+      .custom-navbar .custom-navbar-nav li {
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+    }
+    .custom-navbar .custom-navbar-nav li a {
+      font-weight: 500;
+      color: #ffffff !important;
+      opacity: .5;
+      -webkit-transition: .3s all ease;
+      -o-transition: .3s all ease;
+      transition: .3s all ease;
+      position: relative;
+    }
+    @media (min-width: 768px) {
+      .custom-navbar .custom-navbar-nav li a:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 8px;
+        right: 8px;
+        background: #f9bf29;
+        height: 5px;
+        opacity: 1;
+        visibility: visible;
+        width: 0;
+        -webkit-transition: .15s all ease-out;
+        -o-transition: .15s all ease-out;
+        transition: .15s all ease-out;
+      }
+    }
+    .custom-navbar .custom-navbar-nav li a:hover {
+      opacity: 1;
+    }
+    .custom-navbar .custom-navbar-nav li a:hover:before {
+      width: calc(100% - 16px);
+    }
+    .custom-navbar .custom-navbar-nav li.active a {
+      opacity: 1;
+    }
+    .custom-navbar .custom-navbar-nav li.active a:before {
+      width: calc(100% - 16px);
+    }
+    .custom-navbar .custom-navbar-cta {
+      margin-left: 0 !important;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+      flex-direction: row;
+    }
+    @media (min-width: 768px) {
+      .custom-navbar .custom-navbar-cta {
+        margin-left: 40px !important;
+      }
+    }
+    .custom-navbar .custom-navbar-cta li {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+    .custom-navbar .custom-navbar-cta li:first-child {
+      margin-right: 20px;
+    }
+
+    /* Hero Section */
+    .hero {
+  background: #3366FF;
+  padding: 2rem 0; /* Shrinking the padding reduces the height */
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 10%; /* Reduce the bottom margin to shrink the height */
+  background: #3366FF;
+}
+
+
+    .hero h1 {
+      color: white;
+      font-weight: 700;
+      font-size: 3rem;
+      text-align: center;
+      margin: 0;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 1;
+      animation: slideInUp 0.8s ease-out;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Main Content */
+    .untree_co-section {
+      padding: 4rem 0;
+      position: relative;
+    }
+
+    .section-title {
+      color: var(--primary-blue);
+      font-weight: 700;
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--gradient-primary);
+      border-radius: 3px;
+    }
+    .footer-section {
+      padding: 40px 0;
+      background: #3366FF;
+    }
+    .footer-section .relative {
+      position: relative;
+    }
+    .footer-section a {
+      text-decoration: none;
+      color: #2f2f2f;
+      -webkit-transition: .3s all ease;
+      -o-transition: .3s all ease;
+      transition: .3s all ease;
+    }
+    .footer-section a:hover {
+      color: rgba(47, 47, 47, 0.5);
+    }
+    .footer-section .subscription-form {
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 2;
+      margin-top: 100px;
+    }
+    @media (min-width: 992px) {
+      .footer-section .subscription-form {
+        margin-top: 0px;
+        margin-bottom: 80px;
+      }
+    }
+    .footer-section .subscription-form h3 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #3b5d50;
+    }
+    .footer-section .subscription-form .form-control {
+      height: 50px;
+      border-radius: 10px;
+      font-family: "Inter", sans-serif;
+    }
+    .footer-section .subscription-form .form-control:active, .footer-section .subscription-form .form-control:focus {
+      outline: none;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      border-color: #3b5d50;
+      -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+    }
+    .footer-section .subscription-form .form-control::-webkit-input-placeholder {
+      font-size: 14px;
+    }
+    .footer-section .subscription-form .form-control::-moz-placeholder {
+      font-size: 14px;
+    }
+    .footer-section .subscription-form .form-control:-ms-input-placeholder {
+      font-size: 14px;
+    }
+    .footer-section .subscription-form .form-control:-moz-placeholder {
+      font-size: 14px;
+    }
+    .footer-section .subscription-form .btn {
+      border-radius: 10px !important;
+    }
+    .footer-section .sofa-img {
+      position: absolute;
+      top: -200px;
+      z-index: 1;
+      right: 0;
+    }
+    .footer-section .sofa-img img {
+      max-width: 380px;
+    }
+    .footer-section .links-wrap {
+      margin-top: 0px;
+    }
+    @media (min-width: 992px) {
+      .footer-section .links-wrap {
+        margin-top: 54px;
+      }
+    }
+    .footer-section .links-wrap ul li {
+      margin-bottom: 10px;
+    }
+    .footer-section .footer-logo-wrap .footer-logo {
+      font-size: 32px;
+      font-weight: 500;
+      text-decoration: none;
+      color: lab(100% 0.01 -0.01);
+    }
+    .footer-section .custom-social li {
+      margin: 2px;
+      display: inline-block;
+    }
+    .footer-section .custom-social li a {
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+      display: inline-block;
+      background: #dce5e4;
+      color: #3366FF;
+      border-radius: 50%;
+    }
+    .footer-section .custom-social li a:hover {
+      background: #3b5d50;
+      color: #3366FF;
+    }
+    .footer-section .border-top {
+      border-color: #dce5e4;
+    }
+    .footer-section .border-top.copyright {
+      font-size: 14px !important;
+    }
+    .product-container {
+  background-color: hsl(0, 0%, 100%);
+  margin-top: 100px; 
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 150px; /* Tambahkan ini untuk memberi jarak ke footer */
+}
+
+    .product-container .row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+.product-container .row p {
+  word-wrap: break-word; /* Ensures long text breaks and wraps */
+  overflow: hidden; /* Prevents overflow */
+  text-overflow: ellipsis; /* Adds ellipsis if text overflows */
+  white-space: normal; /* Ensures text wraps instead of staying on one line */
+}
+
+    /* Loading Animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+/* Tooltip custom bawah ikon navbar */
+.icon-tooltip {
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 4px; /* beri jarak bawah agar tooltip tidak overlap */
+}
+.icon-tooltip .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  width: max-content;
+  max-width: 220px;
+  background: #222;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 4px 12px;
+  position: absolute;
+  z-index: 9999;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.2s;
+  font-size: 13px;
+  pointer-events: none;
+  white-space: pre-line;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.icon-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Responsive: Tooltip tetap di dalam layar */
+@media (max-width: 600px) {
+  .icon-tooltip .tooltip-text {
+    left: 0;
+    right: 0;
+    transform: none;
+    margin: 0 auto;
+    min-width: 120px;
+    max-width: 90vw;
+  }
+}
+  </style>

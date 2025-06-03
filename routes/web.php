@@ -174,9 +174,11 @@ Route::post('/produk/submit', [ProductController::class, 'submitProduct'])->name
 Route::get('/shop', [ProductController::class, 'showProducts'])->name('shop');
 
 Route::put('/users/{id}/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
+Route::delete('/users/{id}', [UserlistController::class, 'destroy'])->name('users.destroy');
 
 //Route::get('/history', function () {
 //    return view('history');
 //});
 
 Route::get('/history', [CheckoutController::class, 'showHistory'])->name('history')->middleware('auth');
+Route::post('/cart/buy-now', [CartController::class, 'buyNow'])->name('cart.buyNow');

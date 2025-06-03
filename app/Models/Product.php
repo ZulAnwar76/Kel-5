@@ -12,6 +12,7 @@ class Product extends Model
     public $timestamps = true;
     
     protected $fillable = [
+        'pegawai_id',
         'name',
         'category',
         'size',
@@ -20,10 +21,9 @@ class Product extends Model
         'price',
     ];
 
-    public function carts()
+    public function pegawai()
     {
-    return $this->hasMany(Cart::class, 'product_id');
+        return $this->belongsTo(Pegawai::class, 'pegawai_id', 'pegawai_id');
     }
-
 }
  

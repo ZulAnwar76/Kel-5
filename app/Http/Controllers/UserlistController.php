@@ -12,5 +12,12 @@ class UserlistController extends Controller
     $users = User::whereIn('role', ['pegawai', 'customer'])->get();
     return view('admin.userlist', compact('users'));
     }
+public function destroy($id)
+{
+    $user = \App\Models\User::findOrFail($id);
+    $user->delete();
+
+    return redirect()->route('admin.userlist')->with('success', 'User berhasil dihapus.');
+}
 
 }
