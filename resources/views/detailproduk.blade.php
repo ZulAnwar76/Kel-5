@@ -621,16 +621,17 @@
           <p>{{ $product->description }}</p>
           <h5>Size:</h5>
           <p class="btn btn-dark btn-sm disabled">{{ $product->size }}</p>
-         <!-- Buy Now Button -->
-<div class="mt-3 text-center">
-  <form method="POST" action="{{ route('cart.buyNow') }}">
-    @csrf
-    <input type="hidden" name="product_id" value="{{ $product->product_id }}">
-    <button class="btn btn-custom btn-lg w-100">Buy Now</button>
-  </form>
-</div>
+          <h5 class="mt-3">Stock:</h5>
+          <span class="badge bg-secondary mb-3">1</span> <!-- Tambahkan ini -->
 
-
+          <!-- Buy Now Button -->
+          <div class="mt-3 text-center">
+            <form method="POST" action="{{ route('cart.buyNow') }}">
+              @csrf
+              <input type="hidden" name="product_id" value="{{ $product->product_id }}">
+              <button class="btn btn-custom btn-lg w-100">Buy Now</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

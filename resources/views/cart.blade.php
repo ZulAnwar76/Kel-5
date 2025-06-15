@@ -787,30 +787,33 @@
                     <th class="product-thumbnail">Image</th>
                     <th class="product-name">Product</th>
                     <th class="product-price">Price</th>
+                    <th class="product-stock">Stock</th> <!-- Tambahkan ini -->
                     <th class="product-total">Total</th>
                     <th class="product-remove">Remove</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @foreach ($cartItems as $item)
-  <tr>
-    <td class="product-thumbnail" data-label="Image">
-      <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="img-fluid">
-    </td>
-    <td class="product-name" data-label="Product">
-      <h2 class="h5 text-black">{{ $item->product->name }}</h2>
-    </td>
-    <td data-label="Price">Rp{{ number_format($item->product->price, 0, ',', '.') }}</td>
-    <td data-label="Total">Rp{{ number_format($item->product->price, 0, ',', '.') }}</td>
-    <td data-label="Remove">
-      <form method="POST" action="{{ route('cart.remove', $item->cart_id) }}">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-remove btn-sm" title="Remove">&#10006;</button>
-      </form>
-    </td>
-  </tr>
-                  @endforeach
+ @foreach ($cartItems as $item)
+<tr>
+  <td class="product-thumbnail" data-label="Image">
+    <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="img-fluid">
+  </td>
+  <td class="product-name" data-label="Product">
+    <h2 class="h5 text-black">{{ $item->product->name }}</h2>
+  </td>
+  <td data-label="Price">Rp{{ number_format($item->product->price, 0, ',', '.') }}</td>
+  <td data-label="Stock">1</td> <!-- Tampilkan stock 1 -->
+  <td data-label="Total">Rp{{ number_format($item->product->price, 0, ',', '.') }}</td>
+  <td data-label="Remove">
+    <form method="POST" action="{{ route('cart.remove', $item->cart_id) }}" id="removeCartForm{{ $item->cart_id }}">
+      @csrf
+      @method('DELETE')
+      <button type="button" class="btn btn-remove btn-sm" title="Remove" onclick="confirmRemoveCart({{ $item->cart_id }})">&#10006;</button>
+    </form>
+  </td>
+</tr>
+@endforeach
+
                 </tbody>
               </table>
             </div>
@@ -885,5 +888,24 @@
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/tiny-slider.js"></script>
   <script src="js/custom.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function confirmRemoveCart(cartId) {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: "Anda akan menghapus item ini dari keranjang belanja Anda.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e74c3c',
+      cancelButtonColor: '#95a5a6',
+      confirmButtonText: '<i class="fas fa-trash"></i> Ya, hapus!',
+      cancelButtonText: '<i class="fas fa-times"></i> Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('removeCartForm' + cartId).submit();
+      }
+    });
+  }
+</script>
 </body>
 </html>

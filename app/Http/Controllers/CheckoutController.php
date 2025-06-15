@@ -81,7 +81,7 @@ class CheckoutController extends Controller
 
         return redirect()->route('thankyou.index')->with('success', 'Order placed successfully!');
     }
-    
+
     public function showTransactions()
     {
 
@@ -95,24 +95,33 @@ class CheckoutController extends Controller
     {
         $transaction = Transaction::findOrFail($transaction_id);
 
-        // Menentukan status berdasarkan aksi
-        if ($request->action == 'accept') {
-            $transaction->status = 'approved';
-        } elseif ($request->action == 'reject') {
-            $transaction->status = 'rejected';
+        $user = auth()->user();
+
+        // Cek apakah user memiliki relasi ke pegawai
+        if (!$user->pegawai) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Hanya pegawai yang dapat memperbarui status transaksi.'
+            ], 403);
         }
 
-        // Menyimpan perubahan
+        // Update status dan pegawai_id
+        if ($request->action == 'accept') {
+            $transaction->status = 'approved';
+            $transaction->pegawai_id = $user->pegawai->pegawai_id;
+        } elseif ($request->action == 'reject') {
+            $transaction->status = 'rejected';
+            $transaction->pegawai_id = $user->pegawai->pegawai_id; // bisa juga diisi supaya tahu siapa yang tolak
+        }
+
         $transaction->save();
 
-        // Mengembalikan response
         return response()->json([
             'status' => 'success',
             'message' => 'Status transaksi berhasil diperbarui',
             'new_status' => $transaction->status
         ]);
     }
-
     public function showHistory()
     {
         $transactions = Transaction::where('customer_id', auth()->user()->customer->customer_id)

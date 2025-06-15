@@ -714,82 +714,79 @@
           
           <h3><i class="bi bi-pencil-square"></i>Edit Your Profile</h3>
           
-          <form id="profileForm" novalidate>
-            <div class="form-group">
-              <label for="fullName" class="form-label">
-                <i class="bi bi-person"></i>
-                Full Name <span class="text-danger">*</span>
-              </label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="fullName" value="Md" required
-                       aria-describedby="fullNameError" placeholder="Enter your full name">
-                <i class="bi bi-person-fill input-icon"></i>
-              </div>
-              <div class="error-message" id="fullNameError">
-                <i class="bi bi-exclamation-circle"></i>
-                <span>Please enter your full name</span>
-              </div>
-            </div>
+          <!-- Contoh form dengan data terisi manual -->
+<form id="profileForm" novalidate>
+  <div class="mb-3">
+    <label for="fullname" class="form-label">
+      <i class="bi bi-person"></i>
+      Full Name <span class="text-danger">*</span>
+    </label>
+    <div class="input-group">
+      <input type="text" class="form-control" id="fullname" name="fullname" value="zulfikri anwar" required aria-describedby="fullnameError" placeholder="Enter your full name">
+      <i class="bi bi-person-fill input-icon"></i>
+    </div>
+    <div class="error-message" id="fullnameError">
+      <i class="bi bi-exclamation-circle"></i>
+      <span>Please enter your full name</span>
+    </div>
+  </div>
 
-            <div class="form-group">
-              <label for="email" class="form-label">
-                <i class="bi bi-envelope"></i>
-                Email Address <span class="text-danger">*</span>
-              </label>
-              <div class="input-group">
-                <input type="email" class="form-control" id="email" value="rimel111@gmail.com" required
-                       aria-describedby="emailError" placeholder="Enter your email address">
-                <i class="bi bi-envelope-fill input-icon"></i>
-              </div>
-              <div class="error-message" id="emailError">
-                <i class="bi bi-exclamation-circle"></i>
-                <span>Please enter a valid email address</span>
-              </div>
-            </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">
+      <i class="bi bi-envelope"></i>
+      Email Address <span class="text-danger">*</span>
+    </label>
+    <div class="input-group">
+      <input type="email" class="form-control" id="email" name="email" value="zulfikri@gmail.com" required aria-describedby="emailError" placeholder="Enter your email address">
+      <i class="bi bi-envelope-fill input-icon"></i>
+    </div>
+    <div class="error-message" id="emailError">
+      <i class="bi bi-exclamation-circle"></i>
+      <span>Please enter a valid email address</span>
+    </div>
+  </div>
 
-            <div class="form-group">
-              <label for="address" class="form-label">
-                <i class="bi bi-house"></i>
-                Address
-              </label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="address" value="Kingston, 5236, United State"
-                       aria-describedby="addressError" placeholder="Enter your address">
-                <i class="bi bi-house-fill input-icon"></i>
-              </div>
-              <div class="error-message" id="addressError">
-                <i class="bi bi-exclamation-circle"></i>
-                <span>Please enter your address</span>
-              </div>
-            </div>
+  <div class="mb-3">
+    <label for="address" class="form-label">
+      <i class="bi bi-house"></i>
+      Address
+    </label>
+    <div class="input-group">
+      <input type="text" class="form-control" id="address" name="address" value="JL.karya wisata ujung no.43" aria-describedby="addressError" placeholder="Enter your address">
+      <i class="bi bi-house-fill input-icon"></i>
+    </div>
+    <div class="error-message" id="addressError">
+      <i class="bi bi-exclamation-circle"></i>
+      <span>Please enter your address</span>
+    </div>
+  </div>
 
-            <div class="form-group">
-              <label for="phoneNumber" class="form-label">
-                <i class="bi bi-telephone"></i>
-                Phone Number
-              </label>
-              <div class="input-group">
-                <input type="tel" class="form-control" id="phoneNumber" 
-                       aria-describedby="phoneError" placeholder="Enter your phone number">
-                <i class="bi bi-telephone-fill input-icon"></i>
-              </div>
-              <div class="error-message" id="phoneError">
-                <i class="bi bi-exclamation-circle"></i>
-                <span>Please enter a valid phone number</span>
-              </div>
-            </div>
+  <div class="mb-3">
+    <label for="phone" class="form-label">
+      <i class="bi bi-telephone"></i>
+      Phone Number
+    </label>
+    <div class="input-group">
+      <input type="text" class="form-control" id="phone" name="phone" value="0895378600030" aria-describedby="phoneError" placeholder="Enter your phone number">
+      <i class="bi bi-telephone-fill input-icon"></i>
+    </div>
+    <div class="error-message" id="phoneError">
+      <i class="bi bi-exclamation-circle"></i>
+      <span>Please enter a valid phone number</span>
+    </div>
+  </div>
 
-            <div class="button-group justify-content-center">
-              <button type="submit" class="btn btn-primary" id="saveBtn">
-                <i class="bi bi-check-lg"></i>
-                <span>Save Changes</span>
-              </button>
-              <button type="reset" class="btn btn-secondary" id="cancelBtn">
-                <i class="bi bi-x-lg"></i>
-                <span>Cancel</span>
-              </button>
-            </div>
-          </form>
+  <div class="button-group justify-content-center">
+    <button type="submit" class="btn btn-primary" id="saveBtn">
+      <i class="bi bi-check-lg"></i>
+      <span>Save Changes</span>
+    </button>
+    <button type="reset" class="btn btn-secondary" id="cancelBtn">
+      <i class="bi bi-x-lg"></i>
+      <span>Cancel</span>
+    </button>
+  </div>
+</form>
         </div>
       </div>
     </div>
@@ -916,7 +913,7 @@
       // Form submission
       form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         // Validate all fields
         let isFormValid = true;
         inputs.forEach(input => {
@@ -930,35 +927,14 @@
           saveBtn.classList.add('btn-loading');
           saveBtn.disabled = true;
 
-          // Simulate API call
+          // Simulate API call/loading
           setTimeout(() => {
-            // Remove loading state
             saveBtn.classList.remove('btn-loading');
             saveBtn.disabled = false;
 
-            // Show success message
-            successMessage.style.display = 'flex';
-            
-            // Update original values
-            inputs.forEach(input => {
-              originalValues[input.id] = input.value;
-            });
-
-            // Smooth scroll to success message
-            successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-              successMessage.style.display = 'none';
-            }, 5000);
-
-            // Remove success styling from inputs
-            setTimeout(() => {
-              inputs.forEach(input => {
-                input.classList.remove('success');
-              });
-            }, 2000);
-          }, 1500);
+            // Redirect langsung ke halaman home
+            window.location.href = '/';
+          }, 800); // loading sebentar, bisa diubah/dihilangkan jika mau langsung redirect
         } else {
           // Focus on first invalid field
           const firstInvalid = form.querySelector('.error');

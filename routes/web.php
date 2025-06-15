@@ -1,16 +1,31 @@
 <?php
 
+use App\Models\Product;
+use App\Models\Transaction;
+use App\Models\LogPenambahanProduk;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\Staff\ProductController;
-use App\Http\Controllers\UserlistController;
-use App\Http\Controllers\DetailProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\UserlistController;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use App\Http\Controllers\DetailProductController;
+use App\Http\Controllers\LogPenambahanController;
+use App\Http\Controllers\Staff\ProductController;
 use App\Http\Controllers\LogPenamabahanController;
 use App\Http\Controllers\ReportPenjualanController;
+
+Route::get('/test-email', function () {
+    Mail::raw('Ini email test manual dari route.', function ($message) {
+        $message->to('kamu@contoh.com') // Ganti dengan email yang terdaftar di Mailtrap
+                ->subject('Test Email dari Route');
+    });
+
+    return 'Email dikirim';
+});
 
 Route::middleware('auth')->group(function () {
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -34,9 +49,10 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/productlist', [LogPenamabahanController::class, 'showProductLog']);
+Route::get('/productlist', [LogPenambahanController::class, 'showProductLog']);
 
 Route::get('/listproduct', [ProductController::class, 'listProducts'])->name('product.list');
+Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
 Route::get('/userlist', [UserlistController::class, 'index'])->name('admin.userlist');
 
@@ -150,12 +166,10 @@ Route::middleware(['auth'])->group(function () {
         abort(403, 'Forbidden');
     })->name('pegawai.settings');
 
-//    Route::get('/listproduct', function () {
-//        if (Auth::user()->role === 'pegawai') {
-//            return view('pegawai.listproduct');
-//        }
-//        abort(403, 'Forbidden');
-//    })->name('pegawai.listproduct');
+    Route::get('/listproduct', function () {
+        $products = Product::all();
+        return view('pegawai.listproduct', compact('products'));
+    })->name('product.list');
 });
 
 // Route Khusus Customer
@@ -182,3 +196,27 @@ Route::delete('/users/{id}', [UserlistController::class, 'destroy'])->name('user
 
 Route::get('/history', [CheckoutController::class, 'showHistory'])->name('history')->middleware('auth');
 Route::post('/cart/buy-now', [CartController::class, 'buyNow'])->name('cart.buyNow');
+
+Route::get('/shop', function () {
+    $approvedProductIds = Transaction::where('status', 'approved')
+        ->pluck('product_id')
+        ->toArray();
+    $products = Product::whereNotIn('product_id', $approvedProductIds)->get();
+    return view('shop', compact('products'));
+})->name('shop');
+
+// Route khusus customer (shop.blade.php)
+Route::get('/shop', function () {
+    $approvedProductIds = \App\Models\Transaction::where('status', 'approved')
+        ->pluck('product_id')
+        ->toArray();
+    $products = \App\Models\Product::whereNotIn('product_id', $approvedProductIds)->get();
+    return view('shop', compact('products'));
+})->name('shop');
+
+Route::get('/reset-password', function () {
+    return view('reset');
+})->name('reset-password');
+
+// Buat ngirim form (POST)
+Route::post('/reset-password', [AuthController::class, 'sendResetLink'])->name('forgot-password.submit');

@@ -93,7 +93,7 @@
                     @endif
                     <div class="text-center pt-1 mb-5 pb-1">
                       <button class="btn btn-primary btn-lg btn-block fa-lg gradient-custom-2 mb-3 w-100" type="submit">Login</button>
-                      <a class="text-muted" href="#">Forgot password?</a>
+                      <a class="btn btn-link text-muted w-100" href="{{ route('reset-password') }}">Reset Password</a>
                     </div>
                     <div class="d-flex align-items-center justify-content-center pb-4">
                       <p class="mb-0 me-2">Don't have an account?</p>

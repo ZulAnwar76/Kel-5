@@ -13,7 +13,12 @@ class CartController extends Controller
      */
     public function index()
     {
-        $customer_id = Auth::id();
+        $user = Auth::user();
+        $customer = \App\Models\Customer::where('user_id', $user->user_id)->first();
+        if (!$customer) {
+            return redirect()->route('shop')->with('error', 'Customer profile not found');
+        }
+        $customer_id = $customer->customer_id;
 
         // Ambil item di keranjang dengan relasi produk
         $cartItems = Cart::with('product')
@@ -37,8 +42,14 @@ class CartController extends Controller
             'product_id' => 'required|exists:products,product_id',
         ]);
 
-        // Cek apakah item sudah ada di keranjang
-        $existingCartItem = Cart::where('customer_id', Auth::id())
+        $user = Auth::user();
+        $customer = \App\Models\Customer::where('user_id', $user->user_id)->first();
+        if (!$customer) {
+            return redirect()->back()->with('error', 'Customer profile not found');
+        }
+        $customer_id = $customer->customer_id;
+
+        $existingCartItem = Cart::where('customer_id', $customer_id)
             ->where('product_id', $request->product_id)
             ->first();
 
@@ -47,7 +58,7 @@ class CartController extends Controller
         }
 
         Cart::create([
-            'customer_id' => Auth::id(),
+            'customer_id' => $customer_id,
             'product_id' => $request->product_id,
         ]);
 
@@ -59,11 +70,16 @@ class CartController extends Controller
      */
     public function remove($cart_id)
     {
-        // Cari item di keranjang berdasarkan ID
-        $cart = Cart::where('cart_id', $cart_id)
-    ->where('customer_id', Auth::id())
-    ->firstOrFail();
+        $user = Auth::user();
+        $customer = \App\Models\Customer::where('user_id', $user->user_id)->first();
+        if (!$customer) {
+            return redirect()->route('cart.index')->with('error', 'Customer profile not found');
+        }
+        $customer_id = $customer->customer_id;
 
+        $cart = Cart::where('cart_id', $cart_id)
+            ->where('customer_id', $customer_id)
+            ->firstOrFail();
 
         $cart->delete();
 
@@ -79,14 +95,25 @@ class CartController extends Controller
             'product_id' => 'required|exists:products,product_id',
         ]);
 
-        // Cek apakah item sudah ada di keranjang
-        $existingCartItem = Cart::where('customer_id', Auth::id())
+        // Cek apakah user sudah login
+        if (!Auth::check()) {
+            return redirect()->route('login.show')->with('error', 'Silakan login terlebih dahulu untuk membeli produk.');
+        }
+
+        $user = Auth::user();
+        $customer = \App\Models\Customer::where('user_id', $user->user_id)->first();
+        if (!$customer) {
+            return redirect()->back()->with('error', 'Customer profile not found');
+        }
+        $customer_id = $customer->customer_id;
+
+        $existingCartItem = Cart::where('customer_id', $customer_id)
             ->where('product_id', $request->product_id)
             ->first();
 
         if (!$existingCartItem) {
             Cart::create([
-                'customer_id' => Auth::id(),
+                'customer_id' => $customer_id,
                 'product_id' => $request->product_id,
             ]);
         }

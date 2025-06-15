@@ -354,22 +354,23 @@
         <div class="row fade-up">
 
           @foreach ($products as $product)
-    <div class="col-15 col-md-4 col-lg-3 mb-5">
-        <div class="product-item p-3" style="background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(51,102,255,0.08); text-align: center;">
-            <a href="{{ route('detailproduk', ['id' => $product->product_id]) }}" style="text-decoration: none; color: inherit;">
-                <img src="{{ asset('storage/' . $product->image) }}" class="img-fluid product-thumbnail" alt="{{ $product->name }}">
-                <h3 class="product-title mt-3">{{ $product->name }}</h3>
-                <strong class="product-price d-block mb-3">Rp{{ number_format($product->price, 0, ',', '.') }}</strong>
-            </a>
-            @auth
-                <form method="POST" action="{{ route('cart.add') }}" class="add-to-cart-form">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->product_id }}">
-                    <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
-                </form>
-            @endauth
-        </div>
+<div class="col-15 col-md-4 col-lg-3 mb-5">
+    <div class="product-item p-3" style="background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(51,102,255,0.08); text-align: center;">
+        <a href="{{ route('detailproduk', ['id' => $product->product_id]) }}" style="text-decoration: none; color: inherit;">
+            <img src="{{ asset('storage/' . $product->image) }}" class="img-fluid product-thumbnail" alt="{{ $product->name }}">
+            <h3 class="product-title mt-3">{{ $product->name }}</h3>
+            <strong class="product-price d-block mb-1">Rp{{ number_format($product->price, 0, ',', '.') }}</strong>
+            <span class="badge bg-secondary mb-3">Stock: 1</span> <!-- Tambahkan ini -->
+        </a>
+        @auth
+            <form method="POST" action="{{ route('cart.add') }}" class="add-to-cart-form">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product->product_id }}">
+                <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+            </form>
+        @endauth
     </div>
+</div>
 @endforeach
 
         </div>

@@ -392,6 +392,91 @@
         #logoutForm {
             display: none;
         }
+
+        /* Custom Styles for Invoice Report Page */
+        #filterForm {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        #filterForm select,
+        #filterForm input {
+            padding: 10px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        #filterForm select:focus,
+        #filterForm input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        #filterForm button {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(145deg, #27ae60, #229954);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #filterForm button:hover {
+            background: linear-gradient(145deg, #229954, #1e7a33);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        #filterForm button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .export-buttons {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .export-buttons button {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #exportPdfBtn {
+            background: #e74c3c;
+        }
+
+        #exportPdfBtn:hover {
+            background: #c0392b;
+        }
+
+        #exportExcelBtn {
+            background: #27ae60;
+        }
+
+        #exportExcelBtn:hover {
+            background: #1e7a33;
+        }
     </style>
 </head>
 <body>
@@ -491,12 +576,35 @@
                     </div>
                 </div>
 
+                <!-- FILTER FORM -->
+                <form id="filterForm" style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+                    <input type="date" id="dateFilter" placeholder="Tanggal">
+                    <select id="monthFilter">
+                        <option value="">All Months</option>
+                        @for ($m = 1; $m <= 12; $m++)
+                            <option value="{{ sprintf('%02d', $m) }}">{{ DateTime::createFromFormat('!m', $m)->format('F') }}</option>
+                        @endfor
+                    </select>
+                    <button type="button" id="resetFilter" style="padding: 8px 18px; border-radius: 20px; border: none; background: #e1e8ed; color: #2c3e50; font-weight: 600;">Reset</button>
+                </form>
+
+                <!-- EXPORT BUTTONS -->
+                <div class="export-buttons" style="margin-bottom: 15px; display: flex; gap: 10px;">
+                    <button type="button" id="exportPdfBtn" style="padding: 10px 20px; border-radius: 25px; border: none; background: #e74c3c; color: white; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                    <button type="button" id="exportExcelBtn" style="padding: 10px 20px; border-radius: 25px; border: none; background: #27ae60; color: white; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </button>
+                </div>
+
                 <div class="table-responsive">
                     <table class="data-table" id="invoiceTable">
                         <thead>
                             <tr>
                                 <th>ID Transaksi</th>
                                 <th>Nama Customer</th>
+                                <th>Nama Pegawai</th>
                                 <th>Total Harga</th>
                                 <th>Status</th>
                                 <th>Created At</th>
@@ -507,6 +615,7 @@
                             <tr>
                                 <td><strong>{{ $rekap->transaction_id }}</strong></td>
                                 <td>{{ $rekap->customer }}</td>
+                                <td>{{ $rekap->pegawai }}</td>
                                 <td class="price">Rp {{ number_format($rekap->total_price, 0, ',', '.') }}</td>
                                 <td>
                                     <span class="status-badge 
@@ -527,20 +636,68 @@
         </div>
     </div>
 
+    <!-- jsPDF & html2canvas for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <script>
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-            const searchValue = this.value.toLowerCase();
-            const tableRows = document.querySelectorAll('#invoiceTable tbody tr');
-            
-            tableRows.forEach(row => {
-                const rowText = row.textContent.toLowerCase();
-                if (rowText.includes(searchValue)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+        // Search & Filter functionality
+        function filterAndSearchTable() {
+            const searchValue = document.getElementById('searchInput').value.trim().toLowerCase();
+            const date = document.getElementById('dateFilter').value;
+            const month = document.getElementById('monthFilter').value;
+            const rows = document.querySelectorAll('#invoiceTable tbody tr');
+
+            rows.forEach(row => {
+                let show = true;
+
+                // Ambil kolom: ID Transaksi dan Nama Customer saja
+                const idTransaksi = row.querySelector('td:nth-child(1)').innerText.trim().toLowerCase();
+                const namaCustomer = row.querySelector('td:nth-child(2)').innerText.toLowerCase();
+
+                if (searchValue) {
+                    // Jika searchValue angka, hanya tampilkan baris dengan ID Transaksi yang sama persis
+                    if (/^\d+$/.test(searchValue)) {
+                        if (idTransaksi !== searchValue) {
+                            show = false;
+                        }
+                    } else {
+                        // Jika searchValue bukan angka, cari di nama customer saja
+                        if (!namaCustomer.includes(searchValue)) {
+                            show = false;
+                        }
+                    }
                 }
+
+                // Date, Month
+                const dateText = row.querySelector('td:last-child').innerText.trim();
+                const dateObj = new Date(dateText.replace(/(\d{2}) (\w{3}) (\d{4}), (\d{2}):(\d{2})/, function(_, d, m, y, h, min) {
+                    const months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+                    return `${y}-${('0'+(months[m]+1)).slice(-2)}-${d}T${h}:${min}:00`;
+                }));
+
+                if (date) {
+                    const filterDate = new Date(date);
+                    if (dateObj.toDateString() !== filterDate.toDateString()) show = false;
+                }
+                if (month) {
+                    if ((dateObj.getMonth()+1).toString().padStart(2,'0') !== month) show = false;
+                }
+
+                row.style.display = show ? '' : 'none';
             });
+        }
+
+        document.getElementById('searchInput').addEventListener('keyup', filterAndSearchTable);
+        ['dateFilter','monthFilter'].forEach(id => {
+            document.getElementById(id).addEventListener('change', filterAndSearchTable);
+        });
+        document.getElementById('resetFilter').addEventListener('click', function() {
+            document.getElementById('dateFilter').value = '';
+            document.getElementById('monthFilter').value = '';
+            filterAndSearchTable();
         });
 
         // Sidebar menu toggle
@@ -639,6 +796,59 @@
             row.style.transform = 'translateY(20px)';
             row.style.transition = `all 0.3s ease ${index * 0.1}s`;
             observer.observe(row);
+        });
+
+        // Export buttons functionality
+        // Export to PDF
+        document.getElementById('exportPdfBtn').addEventListener('click', function() {
+            const table = document.getElementById('invoiceTable');
+            html2canvas(table, {scale:2}).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new window.jspdf.jsPDF('l', 'pt', 'a4');
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = pageWidth - 40;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
+                pdf.save('invoice_report.pdf');
+            });
+        });
+
+        document.getElementById('exportExcelBtn').addEventListener('click', function() {
+            const table = document.getElementById('invoiceTable').cloneNode(true);
+
+            // Format tanggal di kolom terakhir (Created At) ke format Date JS
+            Array.from(table.querySelectorAll('tbody tr')).forEach(row => {
+                const td = row.querySelector('td:last-child');
+                if (td) {
+                    const text = td.innerText.trim();
+                    const match = text.match(/(\d{2}) (\w{3}) (\d{4}), (\d{2}):(\d{2})/);
+                    if (match) {
+                        const [ , d, m, y, h, min ] = match;
+                        const months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+                        // Format: YYYY-MM-DDTHH:mm:ss (ISO)
+                        const isoDate = `${y}-${months[m]}-${d}T${h}:${min}:00`;
+                        td.innerText = isoDate;
+                    }
+                }
+            });
+
+            // Export pakai SheetJS
+            const wb = XLSX.utils.table_to_book(table, {sheet:"Invoice Report"});
+            // Set kolom Created At (kolom E) jadi tipe date
+            const ws = wb.Sheets["Invoice Report"];
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            for(let R = range.s.r+1; R <= range.e.r; ++R) { // mulai dari baris 2 (data)
+                const cellAddress = {c:4, r:R}; // kolom ke-5 (E)
+                const cellRef = XLSX.utils.encode_cell(cellAddress);
+                const cell = ws[cellRef];
+                if(cell && typeof cell.v === 'string' && cell.v.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/)) {
+                    cell.t = 'd';
+                    cell.v = new Date(cell.v);
+                    cell.z = 'yyyy-mm-dd hh:mm:ss';
+                }
+            }
+            XLSX.writeFile(wb, 'invoice_report.xlsx');
         });
     </script>
 </body>

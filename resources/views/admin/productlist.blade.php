@@ -536,30 +536,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($logs as $log)
                                     <tr>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>AJ1 High Red & Black</td>
-                                        <td>27 May 2025, 23:30</td>
+                                        <td>{{ $log->pegawai_id ?? 'ID kosong' }}</td>
+                                        <td>{{ $log->product_id ?? 'ID kosong' }}</td>
+                                        <td>{{ $log->name ?? 'Nama kosong' }}</td>
+                                        <td>{{ $log->created_at->format('d-m-Y H:i') }}</td>
                                     </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>2</td>
-                                        <td>Nike Sacai</td>
-                                        <td>27 May 2025, 23:37</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>3</td>
-                                        <td>AJ1 Travis Scott</td>
-                                        <td>27 May 2025, 23:40</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>4</td>
-                                        <td>NB 530</td>
-                                        <td>27 May 2025, 23:44</td>
-                                </tbody>
+                                    @endforeach
                             </table>
                         </div>
                     </div>
